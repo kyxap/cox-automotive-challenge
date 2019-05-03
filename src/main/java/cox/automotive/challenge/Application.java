@@ -92,6 +92,7 @@ public class Application {
         }
 
         executor.invokeAll(dealerWorkerCallableList);
+        executor.shutdown();
 
         for (final Callable<DealerWorker> dW : dealerWorkerCallableList) {
             final Dealer dealer = ((DealerWorker) dW).getDealer();
