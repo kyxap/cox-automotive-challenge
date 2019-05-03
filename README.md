@@ -28,3 +28,5 @@ gradle test
  {"success":true,"message":"Congratulations.","totalMilliseconds":9593}
 ```
 
+### App
+![Application results](img/results.png)
