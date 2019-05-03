@@ -6,10 +6,11 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Callable;
 
 import static cox.automotive.challenge.utill.Endpoints.DEALER_DETAIL_API;
 
-public class DealerWorker implements Runnable {
+public class DealerWorker implements Callable<DealerWorker> {
     private final String dataSetId;
     private final String dealerId;
     private final RestTemplate restTemplate;
@@ -21,14 +22,16 @@ public class DealerWorker implements Runnable {
         this.restTemplate = restTemplate;
     }
 
-    public void run() {
+    public Dealer getDealer() {
+        return dealer;
+    }
+
+    @Override
+    public DealerWorker call() throws Exception {
         final Map<String, String> paramsDeaker = new HashMap<>();
         paramsDeaker.put(Endpoints.Paths.DATASET_ID, dataSetId);
         paramsDeaker.put(Endpoints.Paths.DEALER_ID, dealerId);
         this.dealer = restTemplate.getForEntity(DEALER_DETAIL_API, Dealer.class, paramsDeaker).getBody();
-    }
-
-    public Dealer getDealer() {
-        return dealer;
+        return null;
     }
 }

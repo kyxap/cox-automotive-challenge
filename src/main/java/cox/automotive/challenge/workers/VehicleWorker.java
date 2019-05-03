@@ -5,10 +5,11 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Callable;
 
 import static cox.automotive.challenge.utill.Endpoints.VEHICLE_INFO_API;
 
-public class VehicleWorker implements Runnable {
+public class VehicleWorker implements Callable<VehicleWorker> {
     private final String dataSetId;
     private final String vehicleid;
     private final RestTemplate restTemplate;
@@ -20,14 +21,17 @@ public class VehicleWorker implements Runnable {
         this.restTemplate = restTemplate;
     }
 
-    public void run() {
+    public String getVehicleInfo() {
+        return vehicleInfo;
+    }
+
+    @Override
+    public VehicleWorker call() {
+
         final Map<String, String> paramsForVechInfo = new HashMap<>();
         paramsForVechInfo.put(Endpoints.Paths.DATASET_ID, dataSetId);
         paramsForVechInfo.put(Endpoints.Paths.VEHICLE_ID, vehicleid);
         this.vehicleInfo = restTemplate.getForObject(VEHICLE_INFO_API, String.class, paramsForVechInfo);
-    }
-
-    public String getVehicleInfo() {
-        return vehicleInfo;
+        return null;
     }
 }
